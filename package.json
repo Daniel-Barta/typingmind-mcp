@@ -3,12 +3,19 @@
   "version": "1.2.1",
   "repository": "https://github.com/TypingMind/typingmind-mcp",
   "description": "Model Context Protocol (MCP) servers runner for TypingMind",
-  "main": "lib/server.js",
+  "main": "dist/lib/server.js",
   "bin": {
-    "@typingmind/mcp": "./bin/index.js"
+    "@typingmind/mcp": "./dist/bin/index.js"
   },
   "scripts": {
-    "start": "node bin/index.js"
+    "build": "tsc",
+    "start": "node dist/bin/index.js",
+    "clean": "rimraf dist",
+    "prebuild": "pnpm run clean",
+    "prepublishOnly": "pnpm build",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "prettier": "prettier --write .",
+    "prettier:check": "prettier --check ."
   },
   "keywords": [
     "ai",
@@ -21,16 +28,22 @@
   "author": "TypingMind",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.12.1",
+    "dotenv": "^17.2.1",
+    "@modelcontextprotocol/sdk": "^1.17.4",
     "chalk": "^4.1.2",
     "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "json-stable-stringify": "^1.2.1"
+    "express": "^5.1.0",
+    "json-stable-stringify": "^1.3.0"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
   "devDependencies": {
-    "prettier": "^3.5.3"
+    "rimraf": "^5.0.7",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2",
+    "@types/node": "^24.3.0",
+    "@types/express": "^5.0.3",
+    "@types/cors": "^2.8.19"
   }
 }

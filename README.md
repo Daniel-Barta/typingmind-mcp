@@ -11,6 +11,7 @@ You can quickly start the MCP Connector using `npx` (no install required):
 ```bash
 npx @typingmind/mcp@latest <auth-token>
 ```
+
 - Replace `<auth-token>` with your authentication token provided by TypingMind.
 
 You can also provide the auth token via an environment variable:
@@ -20,6 +21,21 @@ MCP_AUTH_TOKEN=<auth-token> npx @typingmind/mcp@latest
 ```
 
 Keep the process running while you use TypingMind.
+
+### Bind host and .env support
+
+This server reads environment variables from a local `.env` file if present. To bind only to localhost, set the host in your environment or `.env` file:
+
+```
+HOST=127.0.0.1
+PORT=50880
+MCP_AUTH_TOKEN=<auth-token>
+```
+
+Notes:
+
+- Only `HOST` is supported. Default is `0.0.0.0` (all interfaces).
+- On Windows PowerShell you can set variables for the current session with: `$env:HOST = "127.0.0.1"`.
 
 ### HTTPS Support
 
@@ -40,7 +56,7 @@ When both variables are set, the server will use HTTPS instead of HTTP.
 
 If you prefer running the MCP Connector on a remote server:
 
-1. **Install Node.js** (version 14 or later).
+1. **Install Node.js** (version 18 or later).
 2. Run the server using `npx`:
 
    ```bash
@@ -48,11 +64,13 @@ If you prefer running the MCP Connector on a remote server:
    ```
 
    To run with HTTPS:
+
    ```bash
    CERTFILE=./path/to/certificate.crt KEYFILE=./path/to/privatekey.key npx @typingmind/mcp@latest <auth-token>
    ```
 
    Alternatively, for persistent running (e.g., after closing SSH), you may use a process manager like [pm2](https://pm2.keymetrics.io/) or `screen`/`tmux`:
+
    ```bash
    pm2 start npx -- @typingmind/mcp@latest <auth-token>
    ```
@@ -65,55 +83,62 @@ You can also run the MCP Connector using Docker.
 
 1.  **Build the Docker Image:**
     Navigate to the project's root directory (where the `Dockerfile` is located) and run:
+
     ```bash
     docker build -t mcp-connector .
     ```
-    *(You can replace `mcp-connector` with your preferred image tag.)*
+
+    _(You can replace `mcp-connector` with your preferred image tag.)_
 
 2.  **Run the Docker Container:**
+    - **Basic Run (HTTP):**
+      Replace `<auth-token>` with your actual token. This command runs the container in detached mode (`-d`) and maps the container's default port `50880` to the same port on your host machine.
 
-    *   **Basic Run (HTTP):**
-        Replace `<auth-token>` with your actual token. This command runs the container in detached mode (`-d`) and maps the container's default port `50880` to the same port on your host machine.
-        ```bash
-        docker run -d -p 50880:50880 --name mcp-connector-instance mcp-connector <auth-token>
-        ```
+      ```bash
+      docker run -d -p 50880:50880 --name mcp-connector-instance mcp-connector <auth-token>
+      ```
 
-    *   **Using a Different Port:**
-        If you need to use a different port (e.g., 8080 on the host mapped to 12345 in the container), use the `-p` flag for mapping and the `-e PORT` environment variable:
-        ```bash
-        docker run -d -p 8080:12345 -e PORT=12345 --name mcp-connector-instance mcp-connector <auth-token>
-        ```
+    - **Using a Different Port:**
+      If you need to use a different port (e.g., 8080 on the host mapped to 12345 in the container), use the `-p` flag for mapping and the `-e PORT` environment variable:
 
-    *   **Running with HTTPS:**
-        To enable HTTPS, you need to provide the certificate and key files and set the `CERTFILE` and `KEYFILE` environment variables. Mount your host's certificate files into the container (e.g., into a `/certs` directory) and provide the paths via environment variables. Remember to map the appropriate port.
-        ```bash
-        docker run -d \
-          -p 50880:50880 \
-          -e PORT=50880 \
-          -e CERTFILE=/certs/certificate.crt \
-          -e KEYFILE=/certs/privatekey.key \
-          -v /path/to/your/certificate.crt:/certs/certificate.crt:ro \
-          -v /path/to/your/privatekey.key:/certs/privatekey.key:ro \
-          --name mcp-connector-instance \
-          mcp-connector <auth-token>
-        ```
-        *(Replace `/path/to/your/certificate.crt` and `/path/to/your/privatekey.key` with the actual paths on your host machine. The `:ro` flag mounts them as read-only.)*
+      ```bash
+      docker run -d -p 8080:12345 -e PORT=12345 --name mcp-connector-instance mcp-connector <auth-token>
+      ```
 
-    *   **Viewing Logs:**
-        To see the logs from the running container:
-        ```bash
-        docker logs mcp-connector-instance
-        ```
+    - **Running with HTTPS:**
+      To enable HTTPS, you need to provide the certificate and key files and set the `CERTFILE` and `KEYFILE` environment variables. Mount your host's certificate files into the container (e.g., into a `/certs` directory) and provide the paths via environment variables. Remember to map the appropriate port.
 
-    *   **Stopping the Container:**
-        ```bash
-        docker stop mcp-connector-instance
-        ```
+      ```bash
+      docker run -d \
+        -p 50880:50880 \
+        -e PORT=50880 \
+        -e CERTFILE=/certs/certificate.crt \
+        -e KEYFILE=/certs/privatekey.key \
+        -v /path/to/your/certificate.crt:/certs/certificate.crt:ro \
+        -v /path/to/your/privatekey.key:/certs/privatekey.key:ro \
+        --name mcp-connector-instance \
+        mcp-connector <auth-token>
+      ```
 
-    *   **Removing the Container:**
-        ```bash
-        docker rm mcp-connector-instance
-        ```
+      _(Replace `/path/to/your/certificate.crt` and `/path/to/your/privatekey.key` with the actual paths on your host machine. The `:ro` flag mounts them as read-only.)_
+
+    - **Viewing Logs:**
+      To see the logs from the running container:
+
+      ```bash
+      docker logs mcp-connector-instance
+      ```
+
+    - **Stopping the Container:**
+
+      ```bash
+      docker stop mcp-connector-instance
+      ```
+
+    - **Removing the Container:**
+      ```bash
+      docker rm mcp-connector-instance
+      ```
 
 ---
 
@@ -130,22 +155,23 @@ To connect MCP Connector to TypingMind:
 
 All API endpoints require authentication via the Bearer token you provide when starting the server.
 
-| Endpoint                       | Method | Description                                      |
-|---------------------------------|--------|--------------------------------------------------|
-| `/ping`                        | GET    | Health check; returns `{ status: "ok" }`         |
-| `/start`                       | POST   | Start one or more MCP clients; body: `{ mcpServers: { ... } }` |
-| `/restart/:id`                 | POST   | Restart a specific client                        |
-| `/clients`                     | GET    | List all running MCP clients and their tools     |
-| `/clients/:id`                 | GET    | Get info about a specific client                 |
-| `/clients/:id/tools`           | GET    | List available tools for a client                |
-| `/clients/:id/call_tools`      | POST   | Call a tool for a client; body: `{ name, arguments }` |
-| `/clients/:id`                 | DELETE | Stop and delete a client                         |
+| Endpoint                  | Method | Description                                                    |
+| ------------------------- | ------ | -------------------------------------------------------------- |
+| `/ping`                   | GET    | Health check; returns `{ status: "ok" }`                       |
+| `/start`                  | POST   | Start one or more MCP clients; body: `{ mcpServers: { ... } }` |
+| `/restart/:id`            | POST   | Restart a specific client                                      |
+| `/clients`                | GET    | List all running MCP clients and their tools                   |
+| `/clients/:id`            | GET    | Get info about a specific client                               |
+| `/clients/:id/tools`      | GET    | List available tools for a client                              |
+| `/clients/:id/call_tools` | POST   | Call a tool for a client; body: `{ name, arguments }`          |
+| `/clients/:id`            | DELETE | Stop and delete a client                                       |
 
-**Notes:**  
+**Notes:**
+
 - All requests need an `Authorization: Bearer <auth-token>` header.
 - Available ports: The server will choose port `50880` or `50881`, make sure
-these ports are available in your system. You can also use `PORT` environment
-variable to specify a different port.
+  these ports are available in your system. You can also use `PORT` environment
+  variable to specify a different port.
 
 ---
 

@@ -1,2 +1,4 @@
 node_modules
 .readlocal-port
+.env
+dist
