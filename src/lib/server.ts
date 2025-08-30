@@ -177,20 +177,16 @@ export async function start(
       await Promise.all(startPromises);
 
       if (results.errors.length === 0) {
-        return res
-          .status(201)
-          .json({
-            message: "All MCP clients started successfully",
-            clients: results.success,
-          });
+        return res.status(201).json({
+          message: "All MCP clients started successfully",
+          clients: results.success,
+        });
       } else {
-        return res
-          .status(400)
-          .json({
-            message: "Some MCP clients failed to start",
-            success: results.success,
-            errors: results.errors,
-          });
+        return res.status(400).json({
+          message: "Some MCP clients failed to start",
+          success: results.success,
+          errors: results.errors,
+        });
       }
     } catch (error: any) {
       console.error("Error starting clients:", error);
@@ -218,12 +214,10 @@ export async function start(
 
       const result = await startClient(id, config);
 
-      return res
-        .status(200)
-        .json({
-          message: `Client ${id} restarted successfully`,
-          client: result,
-        });
+      return res.status(200).json({
+        message: `Client ${id} restarted successfully`,
+        client: result,
+      });
     } catch (error: any) {
       console.error(`Error restarting client ${id}:`, error);
       return res
@@ -263,12 +257,10 @@ export async function start(
       res.status(200).json(clientsList);
     } catch (error: any) {
       console.error("Error fetching clients list:", error);
-      res
-        .status(500)
-        .json({
-          error: "Failed to retrieve clients list",
-          details: error.message,
-        });
+      res.status(500).json({
+        error: "Failed to retrieve clients list",
+        details: error.message,
+      });
     }
   });
 

@@ -56,7 +56,7 @@ When both variables are set, the server will use HTTPS instead of HTTP.
 
 If you prefer running the MCP Connector on a remote server:
 
-1. **Install Node.js** (version 14 or later).
+1. **Install Node.js** (version 18 or later).
 2. Run the server using `npx`:
 
    ```bash
