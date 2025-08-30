@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+// Load .env variables if available
+require('dotenv').config();
+
 const server = require('../lib/server');
 const chalk = require('chalk');
 

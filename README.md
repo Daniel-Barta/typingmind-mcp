@@ -21,6 +21,20 @@ MCP_AUTH_TOKEN=<auth-token> npx @typingmind/mcp@latest
 
 Keep the process running while you use TypingMind.
 
+### Bind host and .env support
+
+This server reads environment variables from a local `.env` file if present. To bind only to localhost, set the host in your environment or `.env` file:
+
+```
+HOST=127.0.0.1
+PORT=50880
+MCP_AUTH_TOKEN=<auth-token>
+```
+
+Notes:
+- Only `HOST` is supported. Default is `0.0.0.0` (all interfaces).
+- On Windows PowerShell you can set variables for the current session with: `$env:HOST = "127.0.0.1"`.
+
 ### HTTPS Support
 
 To enable HTTPS, set the following environment variables:
