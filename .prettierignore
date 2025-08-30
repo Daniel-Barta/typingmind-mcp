@@ -1,0 +1,5 @@
+# Do not format build output or dependencies
+node_modules
+pnpm-lock.yaml
+dist
+coverage

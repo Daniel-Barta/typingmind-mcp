@@ -1,4 +1,4 @@
-import net from 'net';
+import net from "net";
 
 // List of ports to try in order
 const PORTS = [50880, 50881];
@@ -7,11 +7,11 @@ function isPortAvailable(port: number): Promise<boolean> {
   return new Promise((resolve) => {
     const server = net.createServer();
 
-    server.once('error', () => {
+    server.once("error", () => {
       resolve(false);
     });
 
-    server.once('listening', () => {
+    server.once("listening", () => {
       server.close();
       resolve(true);
     });

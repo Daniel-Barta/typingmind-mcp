@@ -10,7 +10,10 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/bin/index.js",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "prettier": "prettier --write .",
+    "prettier:check": "prettier --check ."
   },
   "keywords": [
     "ai",
