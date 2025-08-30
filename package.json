@@ -10,6 +10,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/bin/index.js",
+    "clean": "rimraf dist",
+    "prebuild": "pnpm run clean",
     "prepublishOnly": "pnpm build",
     "lint": "tsc -p tsconfig.json --noEmit",
     "prettier": "prettier --write .",
@@ -37,6 +39,7 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
+    "rimraf": "^5.0.7",
     "prettier": "^3.6.2",
     "typescript": "^5.9.2",
     "@types/node": "^24.3.0",
