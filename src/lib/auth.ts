@@ -1,10 +1,7 @@
-/**
- * Middleware to verify authentication token
- * @param {string} authToken The token to check against
- * @returns {Function} Express middleware function
- */
-function authMiddleware(authToken) {
-  return (req, res, next) => {
+import { Request, Response, NextFunction } from 'express';
+
+export function authMiddleware(authToken: string) {
+  return (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
@@ -28,7 +25,3 @@ function authMiddleware(authToken) {
     next();
   };
 }
-
-module.exports = {
-  authMiddleware,
-};

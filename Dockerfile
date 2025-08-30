@@ -19,11 +19,17 @@ RUN npm install -g pnpm
 # Copy package.json and pnpm-lock.yaml first to leverage Docker cache
 COPY package.json pnpm-lock.yaml ./
 
-# Install only production dependencies
-RUN pnpm install --prod
+# Install all dependencies (including dev for build)
+RUN pnpm install
 
 # Copy the rest of the application source code
 COPY . .
+
+# Build TypeScript
+RUN pnpm build
+
+# Prune dev dependencies for runtime image size
+RUN pnpm prune --prod
 
 # Set the default port the app will run on
 ENV PORT=50880
@@ -32,4 +38,4 @@ ENV PORT=50880
 EXPOSE 50880
 
 # Define the command to run the app
-CMD ["node", "bin/index.js"]
+CMD ["node", "dist/bin/index.js"]

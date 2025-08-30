@@ -3,12 +3,14 @@
   "version": "1.2.1",
   "repository": "https://github.com/TypingMind/typingmind-mcp",
   "description": "Model Context Protocol (MCP) servers runner for TypingMind",
-  "main": "lib/server.js",
+  "main": "dist/lib/server.js",
   "bin": {
-    "@typingmind/mcp": "./bin/index.js"
+    "@typingmind/mcp": "./dist/bin/index.js"
   },
   "scripts": {
-    "start": "node bin/index.js"
+    "build": "tsc",
+    "start": "node dist/bin/index.js",
+    "prepublishOnly": "pnpm build"
   },
   "keywords": [
     "ai",
@@ -21,7 +23,7 @@
   "author": "TypingMind",
   "license": "MIT",
   "dependencies": {
-  "dotenv": "^16.4.5",
+    "dotenv": "^16.4.5",
     "@modelcontextprotocol/sdk": "^1.12.1",
     "chalk": "^4.1.2",
     "cors": "^2.8.5",
@@ -32,6 +34,11 @@
     "node": ">=14.0.0"
   },
   "devDependencies": {
-    "prettier": "^3.5.3"
+    "prettier": "^3.5.3",
+    "typescript": "^5.6.3",
+    "@types/node": "^22.7.5",
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/json-stable-stringify": "^1.0.36"
   }
 }

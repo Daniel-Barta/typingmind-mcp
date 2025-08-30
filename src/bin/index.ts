@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 
 // Load .env variables if available
-require('dotenv').config();
-
-const server = require('../lib/server');
-const chalk = require('chalk');
+import 'dotenv/config';
+import chalk from 'chalk';
+import { start } from '../lib/server';
 
 // Get auth token from command line arguments or environment variable
-const authToken = process.argv[2] || process.env.MCP_AUTH_TOKEN;
+const authToken: string | undefined = process.argv[2] || process.env.MCP_AUTH_TOKEN;
 
 if (!authToken) {
   console.error(chalk.red('Error: Authentication token is required'));
@@ -17,8 +16,7 @@ if (!authToken) {
 }
 
 // Start the server with the provided auth token
-server
-  .start(authToken)
+start(authToken)
   .then(({ host, port, protocol }) => {
     console.log(
       chalk.green(`✓ MCP runner server running on ${protocol}://${host}:${port}`),
@@ -29,8 +27,7 @@ server
       ),
     );
   })
-  .catch((err) => {
+  .catch((err: Error) => {
     console.error(chalk.red(`Error starting MCP server: ${err.message}`));
     process.exit(1);
   });
-  

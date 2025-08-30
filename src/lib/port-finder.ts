@@ -1,14 +1,9 @@
-const net = require('net');
+import net from 'net';
 
 // List of ports to try in order
 const PORTS = [50880, 50881];
 
-/**
- * Check if a port is available
- * @param {number} port The port to check
- * @returns {Promise<boolean>} True if the port is available
- */
-function isPortAvailable(port) {
+function isPortAvailable(port: number): Promise<boolean> {
   return new Promise((resolve) => {
     const server = net.createServer();
 
@@ -25,11 +20,7 @@ function isPortAvailable(port) {
   });
 }
 
-/**
- * Find an available port from the list
- * @returns {Promise<number|null>} The available port or null if none found
- */
-async function findAvailablePort() {
+export async function findAvailablePort(): Promise<number | null> {
   for (const port of PORTS) {
     if (await isPortAvailable(port)) {
       return port;
@@ -37,7 +28,3 @@ async function findAvailablePort() {
   }
   return null;
 }
-
-module.exports = {
-  findAvailablePort,
-};
